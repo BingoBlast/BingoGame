@@ -27,7 +27,7 @@
             // our socket.io code goes here
 
 	//displaying in div chat
-	var socketio = io.connect("127.0.0.1:1337");
+	var socketio = io.connect("http://polar-coast-5271.herokuapp.com");
 	socketio.on("message_to_client", function(data) {
 		var content = document.getElementById("chatlog").innerHTML;
     	document.getElementById("chatlog").innerHTML = content + "<b>"+ data.nickname +"</b>: <i>"+ data.message +"</i><br />";
