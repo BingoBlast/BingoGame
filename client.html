@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <style>
+		#chatlog{
+			width:150px;
+			height:200px;
+			border:1px solid black;
+		}
+		#divUserStatus{
+			border:1px solid #CFCFCF;
+			width:200px;
+			height:100px;
+			overflow:scroll;
+			overflow-x:hidden;
+		}
+		#onlineUsers{
+			border:1px solid #CFCFCF;
+			width:200px;
+			height:100px;
+			overflow:scroll;
+			overflow-x:hidden;
+		}
+	</style>
+        <script src="/socket.io/socket.io.js"></script>
+        <script type="text/javascript">
+            // our socket.io code goes here
+
+	//displaying in div chat
+	var socketio = io.connect("127.0.0.1:1337");
+	socketio.on("message_to_client", function(data) {
+		var content = document.getElementById("chatlog").innerHTML;
+    	document.getElementById("chatlog").innerHTML = content + "<b>"+ data.nickname +"</b>: <i>"+ data.message +"</i><br />";
+	});
+
+	//sending to server
+	function sendMessage() {
+		//setInterval(draw , 2000);
+		  
+		//function draw(){
+		//number = Math.floor((Math.random()*15)+1);
+		//}
+        var msg = document.getElementById("message_input").value;
+   	    socketio.emit("message_to_server", msg);
+	}
+	
+	function login(){
+		var user = document.getElementById("login").value;
+		 socketio.emit('new user', user);
+		 document.getElementById("divLogin").style.display = "none";
+		 document.getElementById("index").style.display = "block";
+		 
+	}
+	
+	  
+	  socketio.on('user connected' , function(data){
+		  var status = document.getElementById("divUserStatus").innerHTML;
+		 document.getElementById("divUserStatus").innerHTML = status+"<b>"+data+"</b><br />"; 
+	  });
+	  
+	  
+	  socketio.on('usernames', function(data){
+		  var users = "";
+		  for(var i=0; i<data.length; i++){
+			  users += data[i] + "<br />";
+		  }
+		  
+		  
+		  document.getElementById("onlineUsers").innerHTML = users; 
+	  });
+	  
+	 
+	
+	
+	
+    </script>
+    </head>
+    
+    <body>
+    	<div id="divLogin">
+            <div id="divlogin">
+            <input type="text" id="login"/>
+            <button onclick="login()">login</button>
+            </div>
+        </div>
+    	
+    	<div id="index" style="display:none;">
+        <div id="chatlog"></div>
+        <input type="text" id="message_input"/>
+        <button onclick="sendMessage()">send</button>
+        <div id="divUserStatus"></div>
+    	<div id="onlineUsers"></div>
+        </div>
+        
+        
+    </body>
+</html>
