@@ -7,7 +7,7 @@ var app = http.createServer(function (request, response) {
         response.write(data);
         response.end();
     });
-}).listen(80);
+}).listen();
 
  var names = [];
  
